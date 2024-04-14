@@ -60,7 +60,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(400, "Email is required to login");
   }
 
-  const user = await User.findOne({email});
+  const user = await User.findOne({ email });
 
   if (!user) {
     throw new apiError(404, "User not found");
@@ -83,6 +83,10 @@ const loginUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
+    domain: ".onrender.com",
+    path: "/",
+    maxAge: 86400000,
+    sameSite: "none",
   };
 
   // const options = {
@@ -94,8 +98,8 @@ const loginUser = asyncHandler(async (req, res) => {
   //   maxAge: 86400000 ,
   // };
 
-//   res.cookie('accessToken', accessToken, options);
-//  res.cookie('refreshToken', refreshToken, options); 
+  //   res.cookie('accessToken', accessToken, options);
+  //  res.cookie('refreshToken', refreshToken, options);
 
   return res
     .status(200)
@@ -115,27 +119,30 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  
   await User.findByIdAndUpdate(
-      req.user._id,
-      {
-        $unset: {
-          refreshToken: 1,
-        },
+    req.user._id,
+    {
+      $unset: {
+        refreshToken: 1,
       },
-      { new: true }
-    );
-  
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-  
-    return res
-      .status(200)
-      .clearCookie("accessToken", options)
-      .clearCookie("refreshToken", options)
-      .json(new apiResponse(200, {}, "User logged out successfully"));
-  });
+    },
+    { new: true }
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+    domain: ".onrender.com",
+    path: "/",
+    maxAge: 86400000,
+    sameSite: "none",
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new apiResponse(200, {}, "User logged out successfully"));
+});
 
 export { registerUser, loginUser, logoutUser };
