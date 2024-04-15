@@ -83,10 +83,11 @@ const loginUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    domain: ".onrender.com",
+    domain: ".courserapid.com",
     path: "/",
     maxAge: 86400000,
     sameSite: "none",
+    partitioned: true,
   };
 
   // const options = {
@@ -132,10 +133,11 @@ const logoutUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    domain: ".onrender.com",
+    domain: ".courserapid.com",
     path: "/",
     maxAge: 86400000,
     sameSite: "none",
+    partitioned: true,
   };
 
   return res
